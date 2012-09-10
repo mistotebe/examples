@@ -1,0 +1,6 @@
+#!/usr/bin/make -f
+
+.DEFAULT:
+	@echo "Target: $@"
+	@echo "Prereqs: $^"
+

@@ -1,0 +1,15 @@
+These are a few small c examples answering questions about the language,
+architecture or standard libraries. Or just offering a small snippet of code
+solving a trivial task.
+
+Contents:
+addrinfo.c - I want something like "host", but that handles everything like /etc/hosts, mdns,...
+negindex.c - does negative indeging in an array work?
+or.c - does the "||" operator return just "1" for true or the first non-zero argument?
+pointer.c - do pointers behave differently in "if (ptr)" vs. "if (ptr != NULL)"?
+printf.c - how do I print a char* with length info efficiently? How about left padding it?
+reread.c - how do I read a file again and again without launching unnecessary processes (e.g. query remaining entropy from /proc/sys/kernel/random/entropy_avail)
+sscanf-%n.c - I do not know length of the input string, how do I read it? How do I know how long the string was?
+static/ - How does the "static" work? Also, how can I automatically generate dependencies on headers and the like?
+string_macros/ - How do I pass a define that I can use as a string?
+strlenof.c - a macro computing length of a string literal at compile time.

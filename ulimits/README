@@ -1,0 +1,14 @@
+pid:
+    tries to acquire a specified pid
+
+brk:
+    allocates a large amount of memory, then starts filling it
+    useful for testing of ulimit:
+            -m used memory size (unimplemented on Linux)
+            -v virtual memory size
+
+open:
+    run as open x y z
+    launches x connections synchronously to port z on host y
+    reports progress, useful for testing the number of file descriptors
+    available through ulimit -n

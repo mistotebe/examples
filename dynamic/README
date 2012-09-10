@@ -1,0 +1,5 @@
+Creates a small dynamic library/plugin and an executable that loads the plugin,
+the plugin interface is only one function, func. Also, the plugin can make use
+of symbols in the original process, possibly leveraging an internal API.
+
+For bonus points, add libtool support.
