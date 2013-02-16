@@ -1,3 +1,5 @@
+/* See the OpenLDAP project for where this macro was taken from
+ * (aka all credit goes to them) */
 #include <stdio.h>
 #include <string.h>
 #define STRLENOF(x) (sizeof(x) - 1)
