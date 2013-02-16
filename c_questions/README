@@ -4,6 +4,7 @@ solving a trivial task.
 
 Contents:
 addrinfo.c - I want something like "host", but that handles everything like /etc/hosts, mdns,...
+minus.c - I want to compute the absolute value of a number, and you tell me not to use "if (i<0) i=-i;", but why? Let's see it break on INT_MIN...
 negindex.c - does negative indeging in an array work?
 or.c - does the "||" operator return just "1" for true or the first non-zero argument?
 pointer.c - do pointers behave differently in "if (ptr)" vs. "if (ptr != NULL)"?
