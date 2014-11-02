@@ -1,6 +1,6 @@
 #!/usr/bin/make -f
 
-STRING_MACRO = "sl;fj" "a;lj k"
+STRING_MACRO = ".%s.\n", "sl;fj" "a;lj k"
 CPPFLAGS= '-DSTRING_MACRO=$(STRING_MACRO)'
 
 all: print run
