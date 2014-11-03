@@ -19,5 +19,5 @@ write(int fd, const void *buf, size_t count)
 {
     printf("write() from '" NAME "' called\n");
 
-    orig_write(fd, buf, count);
+    return orig_write(fd, buf, count);
 }

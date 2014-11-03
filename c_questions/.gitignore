@@ -1,5 +1,7 @@
 addrinfo
 leaks
+minus
+mmap
 negindex
 or
 pointer
