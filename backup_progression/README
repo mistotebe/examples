@@ -1,12 +1,13 @@
-file.sh implements a S(log n) and (amortized) O(1) (per file) backup filing and
+file.sh implements an (amortized) constant runtime backup filing and
 expiration algorithm (almost, the filesystem probably cannot store things in a
 way we could make it truly an amortized O(1)), there is still room for
 optimization and making each runtime reasonably close to actually have it O(1),
 which should be possible as well.
 
 It has the nice property of storing/expiring the files such that the closer to
-the present your desired data is, the more precise choice (time resolution) you
-get, while keeping the storage space to a minimum.
+the present your desired data is, the more precise choice (time resolution) of
+a backup you get, while keeping the storage space to a minimum - space
+requirements are O(log n) where n is the total number of files ever filed in.
 
 It is easy to extend the algorithm so that it is symmetric (the closer to the
 beginning of backups or the closer to the present you get, the better
