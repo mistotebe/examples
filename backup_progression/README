@@ -1,0 +1,30 @@
+file.sh implements a S(log n) and (amortized) O(1) (per file) backup filing and
+expiration algorithm (almost, the filesystem probably cannot store things in a
+way we could make it truly an amortized O(1)), there is still room for
+optimization and making each runtime reasonably close to actually have it O(1),
+which should be possible as well.
+
+It has the nice property of storing/expiring the files such that the closer to
+the present your desired data is, the more precise choice (time resolution) you
+get, while keeping the storage space to a minimum.
+
+It is easy to extend the algorithm so that it is symmetric (the closer to the
+beginning of backups or the closer to the present you get, the better
+resolution) and keep the same asymptotic guarantees for both space and runtime.
+
+The script expects to start with an empty working directory (first parameter)
+and a list of files to file into it.
+
+The most common use would probably be to run it with the working directory as
+the only argument when using it for the first time to initialize that
+directory. Then every time you want to file a new version of a file, you
+provide it as a second argument which will be moved (not copied) into the work
+directory:
+./file.sh "$workdir" "$backup_file"
+
+This is a proof of concept, so it does little to no error checking and will
+work best if you make sure only one instance is running per working directory
+and that not many files are archived in the same second. Both flaws are
+relatively easy to fix, but would make the algorithm less obvious for a casual
+reader. Just to warn you if you ever decide to run this exact script in
+production...
