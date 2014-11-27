@@ -8,10 +8,15 @@ int main()
 {
     int *i;
     struct list *head, *current;
+    char *a;
 
     i = malloc( sizeof(int) );
 
     i = malloc( sizeof(int) );
+    i[1] = 1;
+
+    a = malloc(1);
+    a[4] = 'a';
 
     current = head = malloc( sizeof(struct list) );
 
