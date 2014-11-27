@@ -10,6 +10,7 @@ int main(int argc, char** argv)
 {
     struct sockaddr_in6 sin;
     int sock, conn, option = 0;
+    int conn_count = 0;
 
     memset(&sin, 0, sizeof(sin));
     sin.sin6_family = AF_INET6;
@@ -38,8 +39,8 @@ int main(int argc, char** argv)
     }
 
     while ((conn = accept(sock, NULL, NULL)) >= 0) {
-        printf("A connection!\n");
-        close(conn);
+        printf("\r%d", ++conn_count);
+        fflush(stdout);
     }
 
     close(sock);
