@@ -4,6 +4,9 @@ from datetime import datetime, timedelta
 import sys
 import erppeek
 
+# Naughty!
+LAST_CLEAN = [None]
+
 def grouping(source, attr='date'):
     current = None
     accum = []
@@ -40,6 +43,9 @@ def expire(entries, entry, duration=timedelta(days=30)):
 
     #print "Processing {}".format(entry)
     current_date, current_offset = entry
+    if abs(sum([x[1] for x in entries])) < 1./8:
+        LAST_CLEAN[0] = current_date
+
     if not entries and current_offset:
         entries.append(entry)
         #print "Adding {} to empty entries".format(entry)
@@ -81,12 +87,18 @@ def expire(entries, entry, duration=timedelta(days=30)):
 if __name__ == '__main__':
     if len(sys.argv[1:]) < 3:
         print >>sys.stderr, "Too few arguments"
-        print >>sys.stderr, "{} URL db username".format(sys.argv[0])
-    client = erppeek.Client(*sys.argv[1:])
+        print >>sys.stderr, "{} URL db username [start_day]".format(sys.argv[0])
+    client = erppeek.Client(*sys.argv[1:4])
     ts = client.model('hr.analytic.timesheet')
 
-    days = list(grouping(ts.read([('user_id', '=', client.user)], 'duration date account_id', order='date')))
+    domain = [('user_id', '=', client.user)]
+    if len(sys.argv) >= 5:
+        domain.append(('date', '>=', sys.argv[4]))
+
+    days = list(grouping(ts.read(domain, 'duration date account_id', order='date')))
     d = [(datetime.strptime(date, '%Y-%m-%d').date(), sum(map(partial(valuate, sign=in_lieu_check(client)), entries), -8)) for (date, entries) in days if date]
     left = reduce(expire, d, [])
+    if LAST_CLEAN[0]:
+        print "Last clean day was {}, you can use it next time you run this to speed things up".format(LAST_CLEAN[0].strftime('%Y-%m-%d'))
     print "Have {} hours to use".format(sum([x[1] for x in left]))
     print left
