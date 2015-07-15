@@ -3,7 +3,8 @@
 empty :=
 space := $(empty) $(empty)
 
-SOARGS=-fPIC -shared -ldl
+SOARGS=-fPIC -shared
+LIBS=-ldl
 
 PROGRAMS = preloaded
 
@@ -28,7 +29,7 @@ gotcha: all
 	LD_PRELOAD="$(subst $(space),:,$(addprefix ./, $(GOTCHA_LIBRARIES)))" ./preloaded
 
 %.so: %.c
-	$(CC) $(SOARGS) -DNAME='"$@"' -o $@ $^
+	$(CC) $(SOARGS) -DNAME='"$@"' -o $@ $^ $(LIBS)
 
 clean:
 	rm -f *.o $(PROGRAMS)
