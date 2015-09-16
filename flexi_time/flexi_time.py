@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 from functools import partial
 from datetime import datetime, timedelta
 
@@ -96,7 +97,8 @@ if __name__ == '__main__':
         domain.append(('date', '>=', sys.argv[4]))
 
     days = list(grouping(ts.read(domain, 'duration date account_id', order='date')))
-    d = [(datetime.strptime(date, '%Y-%m-%d').date(), sum(map(partial(valuate, sign=in_lieu_check(client)), entries), -8)) for (date, entries) in days if date]
+    sign_check = in_lieu_check(client)
+    d = [(datetime.strptime(date, '%Y-%m-%d').date(), sum(map(partial(valuate, sign=sign_check), entries), -8)) for (date, entries) in days if date]
     left = reduce(expire, d, [])
     if LAST_CLEAN[0]:
         print "Last clean day was {}, you can use it next time you run this to speed things up".format(LAST_CLEAN[0].strftime('%Y-%m-%d'))
