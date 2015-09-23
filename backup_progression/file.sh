@@ -27,7 +27,7 @@ promote() {
         candidates=( "$workdir/"*"_$current_level" )
         # sort candidates properly
         if [ "${#candidates[@]}" -gt 2 ]; then
-            old_file="${candidates[0]}"
+            old_file=$(basename "${candidates[0]}")
             new_file=$(
                 IFS=_
                 name_parts=( $old_file )
@@ -36,7 +36,7 @@ promote() {
             )
             to_remove="${candidates[1]}"
 
-            mv "$old_file" "$new_file"
+            mv "$workdir/$old_file" "$workdir/$new_file"
             rm "$to_remove"
             break
         fi
