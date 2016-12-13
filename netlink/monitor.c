@@ -1,3 +1,6 @@
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #include <unistd.h>
 #include <stdio.h>
 #include <assert.h>
@@ -33,7 +36,38 @@ get_executable_name(__kernel_pid_t pid)
     return out;
 }
 
-static int process_message(struct nl_msg *msg, void *arg)
+void
+print_arguments(__kernel_pid_t pid)
+{
+    char filename[40], buffer[BUFSIZ], *p = buffer;
+    ssize_t len, slen, remaining = 0;
+    int fd;
+
+    sprintf(filename, "/proc/%d/cmdline", pid);
+
+    fd = open(filename, O_RDONLY);
+    if (fd < 0) return;
+
+    printf("\tArguments:");
+    while ( (len = read(fd, p, BUFSIZ - remaining)) > 0 ) {
+        remaining += len;
+        p = buffer;
+
+        while ( (slen = strnlen(p, remaining)) < remaining ) {
+            printf(" '%s'", p);
+            p += slen + 1;
+            remaining -= slen + 1;
+        }
+
+        memmove(buffer, p, remaining);
+        p = buffer + remaining;
+    }
+
+    printf("\n");
+}
+
+static int
+process_message(struct nl_msg *msg, void *arg)
 {
     struct nlmsghdr *msg_hdr = nlmsg_hdr(msg);
     struct cn_msg *cn_msg = nlmsg_data(msg_hdr);
@@ -54,6 +88,7 @@ static int process_message(struct nl_msg *msg, void *arg)
             printf("Process %d changed its program to '%s'\n",
                     event->event_data.exec.process_pid,
                     executable);
+            print_arguments(event->event_data.exec.process_pid);
             break;
         case PROC_EVENT_UID:
             printf("Process %s(%d) changed its uid %d -> %d\n",
@@ -105,7 +140,8 @@ static int process_message(struct nl_msg *msg, void *arg)
     return NL_OK;
 }
 
-int set_up_subscriptions(struct nl_sock *s, int enable)
+int
+set_up_subscriptions(struct nl_sock *s, int enable)
 {
     struct cn_msg *msg;
     size_t msg_len = sizeof(struct cn_msg) + sizeof(enum proc_cn_mcast_op);
@@ -146,7 +182,7 @@ int main()
     }
 
     /*
-    if (nl_socket_modify_cb(s, NL_CB_OVERRRUN, NL_CB_CUSTOM, process_message, "an invalid")) {
+    if (nl_socket_modify_cb(s, NL_CB_OVERRUN, NL_CB_CUSTOM, process_message, "an invalid")) {
         perror("nl_socket_modify_cb");
         return 1;
     }
