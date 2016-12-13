@@ -6,7 +6,9 @@ import sys
 import erppeek
 
 # Naughty!
-LAST_CLEAN = [None]
+last_clean = None
+changes = []
+
 
 def grouping(source, attr='date'):
     current = None
@@ -44,17 +46,24 @@ def expire(entries, entry, duration=timedelta(days=30)):
 
     #print "Processing {}".format(entry)
     current_date, current_offset = entry
+
     if abs(sum([x[1] for x in entries])) < 1./8:
-        LAST_CLEAN[0] = current_date
+        global last_clean
+        last_clean = current_date
 
     if not entries and current_offset:
         entries.append(entry)
+        changes.append(entry)
         #print "Adding {} to empty entries".format(entry)
         return entries
 
     while entries and entries[0][0] + duration < current_date:
-        print "Expiring {1} hours from {0}".format(*entries[0])
+        #print "Expiring {1} hours from {0}".format(*entries[0])
+        changes.append((current_date, 'Expiration of %s' % (entries[0],)))
         entries.pop(0)
+
+    if current_offset:
+        changes.append(entry)
 
     while entries:
         if not current_offset:
@@ -68,13 +77,13 @@ def expire(entries, entry, duration=timedelta(days=30)):
             entries.append((current_date, current_offset))
         elif new_offset * current_offset < 0:
             # there is still new_offset left in the first entry
-            #print "{} hours left in first entry".format(new_offset)
+            #print "{} hours left in first entry on {}".format(new_offset, current_date)
             date, offset = entries[0]
             entries[0] = (date, new_offset)
         else:
             # we have exhausted the first entry, try with another
             current_offset = new_offset
-            #print "exhausted entry of {1} hours from {0}".format(*entries[0])
+            #print "exhausted entry of {2} hours from {1} on {0}".format(current_date, *entries[0])
             entries.pop(0)
             continue
         break
@@ -100,7 +109,10 @@ if __name__ == '__main__':
     sign_check = in_lieu_check(client)
     d = [(datetime.strptime(date, '%Y-%m-%d').date(), sum(map(partial(valuate, sign=sign_check), entries), -8)) for (date, entries) in days if date]
     left = reduce(expire, d, [])
-    if LAST_CLEAN[0]:
-        print "Last clean day was {}, you can use it next time you run this to speed things up".format(LAST_CLEAN[0].strftime('%Y-%m-%d'))
+    print "Last 10 changes:"
+    for change in changes[-10:]:
+        print "\t", change
+    if last_clean:
+        print "Last clean day was {}, you can use it next time you run this to speed things up".format(last_clean.strftime('%Y-%m-%d'))
     print "Have {} hours to use".format(sum([x[1] for x in left]))
     print left
