@@ -1,0 +1,11 @@
+A more useful take to dynamic module management than the one in ../dynamic
+
+To build:
+- autoreconf -ivh
+- ./configure ...
+- make
+
+If specifying prefix not in compiler/linker's path, don't forget to add the
+following to configure, especially if there are libraries you need:
+CPPFLAGS='-I$(includedir)'
+LDFLAGS='-L$(libdir) -Wl,-rpath -Wl,$(libdir)'
