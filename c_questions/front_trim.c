@@ -70,7 +70,7 @@ main( int argc, char **argv )
 			return 1;
 		}
 
-		if ( stat.st_size > stat.st_blksize + size ) {
+		if ( stat.st_blocks * 512 > stat.st_blksize + size ) {
 			off_t trim;
 
 			trim = ALIGN_DOWN( stat.st_size - size, stat.st_blksize );

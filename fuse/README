@@ -1,0 +1,9 @@
+This "filesystem" provides only a single file. The mountpoint
+needs to be a file rather than a directory. Its storage is backed
+by a circular buffer of a predetermined size n and is append-only.
+Reads will read from that buffer, effectively reading the last n
+bytes written to it.
+
+To set the buffer size, pass the size=<size> option when mounting.
+Size can be suffixed with either of 'k', 'm' or 'g' for powers of
+1000 or 'K', 'M' or 'G' for powers of 1024.
