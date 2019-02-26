@@ -8,6 +8,7 @@ world program.
 Contents:
 absolute_timer.c - Clock programs are annoying, they either wake up to update the display like every second (even when only minutes are shown, draining the battery) or keep stale for far too long. Sure there is a way to reliably wake up on the strike of a new minute/hour and only then.
 addrinfo.c - I want something like "host", but that handles everything like /etc/hosts, mdns,... (getent hosts is still better)
+bind.c - Don't forget you can let the OS to pick a port for you to listen on by specifying port 0, this is how you organise it
 minus.c - I want to compute the absolute value of a number, and you tell me not to use "if (i<0) i=-i;", but why? Let's see it break on INT_MIN...
 negindex.c - does negative indeging in an array work?
 or.c - does the "||" operator return just "1" for true or the first non-zero argument?
